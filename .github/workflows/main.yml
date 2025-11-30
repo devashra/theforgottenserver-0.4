@@ -6,7 +6,7 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest   # << ALTERADO
 
     steps:
     - name: Checkout repository
@@ -16,12 +16,15 @@ jobs:
       run: |
         sudo apt-get update
         sudo apt-get install -y \
-          build-essential \
           cmake \
+          build-essential \
           liblua5.1-0-dev \
+          libboost-system-dev \
+          libboost-filesystem-dev \
+          libboost-thread-dev \
           libxml2-dev \
+          libsqlite3-dev \
           libgmp-dev \
-          libboost-all-dev \
           libmysqlclient-dev
 
     - name: Create build directory
@@ -31,12 +34,12 @@ jobs:
       run: cmake .. -DCMAKE_BUILD_TYPE=Release
       working-directory: build
 
-    - name: Compile
+    - name: Build
       run: make -j4
       working-directory: build
 
-    - name: Upload binary
+    - name: Upload artifact
       uses: actions/upload-artifact@v3
       with:
-        name: tfs-04
+        name: tfs-04-build
         path: build/theforgottenserver
